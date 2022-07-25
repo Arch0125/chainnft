@@ -7,7 +7,7 @@ function App() {
 
   const axios = require('axios');
 
-  const[file,setFile]=useState('');
+  const[file,setFile]=useState(null);
   const[fileName,setFileName]=useState('');
   const[desc,setDesc]=useState('');
 
@@ -16,26 +16,32 @@ function App() {
     "description":desc,
   };
 
-  const header={
-    "x-api-key":'1ca942ab-2b6d-401e-881e-5aa536c9487b',
-  }
+  var metadata = JSON.stringify(nftmeta);
+
+  var img = 'https://svgshare.com/i/jWh.svg';
+
+  let axiosConfig = {
+    headers: {
+        'x-api-key':'1ca942ab-2b6d-401e-881e-5aa536c9487b',
+        'Content-Type': 'multipart/form-data',
+        "Access-Control-Allow-Origin": "*",
+    }
+  };
+
+  let formdata = new FormData();
 
   const uploadipfs=async()=>{
-    await axios.post('https://api.mintnft.today/v1/upload/single',{
-      "metadata":nftmeta,
-      "image":file,
-      "asset":file
-    },{
-      headers: {
-        'x-api-key': `1ca942ab-2b6d-401e-881e-5aa536c9487b` 
-      }
-    }).then(res=>{
-      console.log(res);
-    }
-    ).catch(err=>{
-      console.log(err);
-    }
-    );
+    formdata.set('metadata', metadata);
+    formdata.append('image', file);
+    formdata.append('asset', file);
+    console.log(formdata.get('image'));
+    axios.post('https://api.mintnft.today/v1/upload/single', formdata, axiosConfig)
+    .then((res) => {
+      console.log("RESPONSE RECEIVED: ", res);
+    })
+    .catch((err) => {
+      console.log("AXIOS ERROR: ", err);
+    })
   }
 
   return (
@@ -49,7 +55,7 @@ function App() {
         <label className='text-xl font-extrabold bg-white text-blue-900 w-fit-h-fit p-3 rounded-xl' >1. Uploading your Image </label>
         <div className='flex flex-col w-full h-fit border-2 border-white mt-5 p-4 rounded-2xl ' >
           <label className='text-xl font-medium mb-2' >Choose your image :</label>
-        <input type="file" onChange={(e)=>setFile(e.target.value)} />
+        <input type="file" onChange={(e)=>setFile(e.target.files[0])} />
         </div>
         <div className='flex flex-col w-full h-fit border-2 border-white mt-10 p-4 rounded-2xl ' >
           <label className='text-xl font-medium mb-2' >Or even draw using our editors :</label>
