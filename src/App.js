@@ -1,10 +1,42 @@
 import logo from './logo.svg';
 import './App.css';
 import { useState } from 'react';
+import axios from 'axios';
 
 function App() {
 
+  const axios = require('axios');
+
   const[file,setFile]=useState('');
+  const[fileName,setFileName]=useState('');
+  const[desc,setDesc]=useState('');
+
+  var nftmeta={
+    "name":fileName,
+    "description":desc,
+  };
+
+  const header={
+    "x-api-key":'1ca942ab-2b6d-401e-881e-5aa536c9487b',
+  }
+
+  const uploadipfs=async()=>{
+    await axios.post('https://api.mintnft.today/v1/upload/single',{
+      "metadata":nftmeta,
+      "image":file,
+      "asset":file
+    },{
+      headers: {
+        'x-api-key': `1ca942ab-2b6d-401e-881e-5aa536c9487b` 
+      }
+    }).then(res=>{
+      console.log(res);
+    }
+    ).catch(err=>{
+      console.log(err);
+    }
+    );
+  }
 
   return (
     <div className='flex flex-row w-screen h-screen bg-white' >
@@ -28,9 +60,9 @@ function App() {
         <label className='text-xl font-extrabold bg-white text-blue-900 w-fit-h-fit p-3 mt-10 rounded-xl' >2. Uploading your IPFS </label>
         <div className='flex flex-col w-full h-full border-2 border-white mt-5 p-4 rounded-2xl ' >
           <label className='text-2xl font-medium ' >Enter details about Image : </label>
-          <input className='w-full mt-5 h-fit p-2 rounded-xl' placeholder='NFT Name' />
-          <input className='w-full mt-5 h-fit p-2 rounded-xl' placeholder='NFT Description' />
-          <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-5 ' >Upload to IPFS</button>
+          <input className='w-full mt-5 h-fit p-2 rounded-xl text-black' placeholder='NFT Name' onChange={(e)=>setFileName(e.target.value)} />
+          <input className='w-full mt-5 h-fit p-2 rounded-xl text-black' placeholder='NFT Description' onChange={(e)=>setDesc(e.target.value)} />
+          <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-5 ' onClick={uploadipfs} >Upload to IPFS</button>
         </div>
       </div>
       <div className='flex flex-col bg-blue-900 w-[40%] text-white p-6 m-4 rounded-3xl ' >
