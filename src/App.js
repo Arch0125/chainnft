@@ -1,11 +1,49 @@
 import logo from './logo.svg';
 import './App.css';
 import { useEffect, useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 
 function App() {
 
   const axios = require('axios');
+
+  const errnotify = (err) => {
+    toast.error(`${err.response.data.message}`, {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+  }
+
+  const sucnotify = (res) => {
+    toast.success(`Token ID : ${res.data.data.tokenId}`, {
+      position: "bottom-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+      toast.success(<div>
+        <a href={"https://opensea.io/assets/matic/0x03e055692e77e56abf7f5570d9c64c194ba15616/"+res.data.data.tokenId} >View NFT</a>
+      </div>, {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+  }
+
 
   const[file,setFile]=useState(null);
   const[fileName,setFileName]=useState('');
@@ -49,6 +87,7 @@ function App() {
       console.log("RESPONSE RECEIVED: ", res);
     })
     .catch((err) => {
+      errnotify(err);
       console.log("AXIOS ERROR: ", err);
     })
   }
@@ -91,9 +130,11 @@ const giftmintnft={
       }
     })
     .then((res) => {
+      sucnotify(res);
       console.log("RESPONSE RECEIVED: ", res);
     })
     .catch((err) => {
+      errnotify(err);
       console.log("AXIOS ERROR: ", err);
     })
   }
@@ -106,15 +147,28 @@ const giftmintnft={
       }
     })
     .then((res) => {
+      sucnotify(res);
       console.log("RESPONSE RECEIVED: ", res);
     })
     .catch((err) => {
+      errnotify(err);
       console.log("AXIOS ERROR: ", err);
     })
   }
 
   return (
     <div className='flex flex-row w-screen h-screen bg-white' >
+        <ToastContainer
+position="bottom-center"
+autoClose={5000}
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+pauseOnFocusLoss
+draggable
+pauseOnHover
+/>
       <div className=' flex flex-col bg-blue-900 w-[20%] text-white p-6 m-4 rounded-3xl ' >
         <label className='text-5xl font-extrabold mt-5' >Chains <br/> NFT</label>
         <p className='text-xl mt-10 '>The marketplace where you can mint NFTs without even connecting your wallet</p>
