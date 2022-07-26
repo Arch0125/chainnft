@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function App() {
@@ -10,16 +10,23 @@ function App() {
   const[file,setFile]=useState(null);
   const[fileName,setFileName]=useState('');
   const[desc,setDesc]=useState('');
+  const[nfturi,setNfturi]=useState('');
+  const[nftname,setNftname]=useState('');
+  const[nftdesc,setNftdesc]=useState('');
+  const[nftimage,setNftimage]=useState('');
+  const[walletaddress,setWalletAddress]=useState('');
+  const[gift,setGift]=useState('');
 
   var nftmeta={
     "name":fileName,
     "description":desc,
   };
 
+  useEffect(()=>{
+    getipfs();
+  });
+
   var metadata = JSON.stringify(nftmeta);
-
-  var img = 'https://svgshare.com/i/jWh.svg';
-
   let axiosConfig = {
     headers: {
         'x-api-key':'1ca942ab-2b6d-401e-881e-5aa536c9487b',
@@ -36,6 +43,68 @@ function App() {
     formdata.append('asset', file);
     console.log(formdata.get('image'));
     axios.post('https://api.mintnft.today/v1/upload/single', formdata, axiosConfig)
+    .then((res) => {
+      setNfturi(res.data.data.url);
+      getipfs();
+      console.log("RESPONSE RECEIVED: ", res);
+    })
+    .catch((err) => {
+      console.log("AXIOS ERROR: ", err);
+    })
+  }
+
+  const getipfs=async()=>{
+    axios.get('https://ipfs.io/ipfs/'+nfturi.slice(7))
+    .then((res) => {
+      setNftname(res.data.name);
+      setNftdesc(res.data.description);
+      setNftimage('https://ipfs.io/ipfs/'+(res.data.image).slice(7));
+      console.log("RESPONSE RECEIVED: ", res);
+    })
+    .catch((err) => {
+      console.log("IPFS ERROR: ", err);
+    })
+  };
+
+  const mintnft={
+    "wallet": `${walletaddress}`,
+    "type": "ERC721",
+    "network" : "mainnet",
+    "amount": 1,
+    "tokenUri" : nfturi
+}
+
+const giftmintnft={
+  "wallet": `${gift}`,
+  "type": "ERC721",
+  "network" : "mainnet",
+  "amount": 1,
+  "tokenUri" : nfturi
+}
+
+
+  const mint=async()=>{
+    axios.post('https://api.mintnft.today/v1/mint/single', mintnft, {
+      headers: {
+        'x-api-key':'ce929521-4a6e-4edc-8891-85090cc98f95',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((res) => {
+      console.log("RESPONSE RECEIVED: ", res);
+    })
+    .catch((err) => {
+      console.log("AXIOS ERROR: ", err);
+    })
+  }
+
+  const giftmint=async()=>{
+    axios.post('https://api.mintnft.today/v1/mint/single', giftmintnft, {
+      headers: {
+        'x-api-key':'ce929521-4a6e-4edc-8891-85090cc98f95',
+        'Content-Type': 'application/json',
+      }
+    })
     .then((res) => {
       console.log("RESPONSE RECEIVED: ", res);
     })
@@ -69,26 +138,28 @@ function App() {
           <input className='w-full mt-5 h-fit p-2 rounded-xl text-black' placeholder='NFT Name' onChange={(e)=>setFileName(e.target.value)} />
           <input className='w-full mt-5 h-fit p-2 rounded-xl text-black' placeholder='NFT Description' onChange={(e)=>setDesc(e.target.value)} />
           <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-5 ' onClick={uploadipfs} >Upload to IPFS</button>
+          <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-5 ' onClick={getipfs} >Get IPFS</button>
         </div>
       </div>
-      <div className='flex flex-col bg-blue-900 w-[40%] text-white p-6 m-4 rounded-3xl ' >
+      <div className='flex flex-col bg-blue-900 w-[40%] h-fit text-white p-6 m-4 rounded-3xl ' >
       <label className='text-xl font-extrabold bg-white text-blue-900 w-fit-h-fit p-3 rounded-xl' >3. Mint your NFT </label>
       <div className='flex flex-col w-full h-fit border-2 border-white bg-white mt-5 p-4 rounded-2xl ' >
         <label className='text-2xl text-blue-900 font-extrabold'>Preview NFT</label>
-        <p className='text-xl text-blue-900 font-bold' >Name</p>
-        <p className='text-xl text-blue-900 font-bold' >Description</p>
+        <img src={nftimage} className=' border-2 p-4 rounded-2xl' />
+        <p className='text-xl text-blue-900 font-bold' >Name : {nftname}</p>
+        <p className='text-xl text-blue-900 font-bold' >Description : {nftdesc}</p>
       </div>
       <div className='flex flex-col w-full h-fit border-2 border-white mt-10 p-4 rounded-2xl ' >
         <label className='text-xl text-white font-bold'>Connect Wallet</label>
         <p className='text-xl text-white font-bold'>Or Enter Wallet Address</p>
-        <input className='w-full p-3 font-medium rounded-2xl mt-2 text-black' placeholder='0x0AD34' />
-        <button className='w-full p-3 text-blue-900 bg-white mt-3 rounded-2xl'>Mint NFT 🎉</button>
+        <input className='w-full p-3 font-medium rounded-2xl mt-2 text-black' placeholder='0x0AD34' onChange={(e)=>setWalletAddress(e.target.value)} />
+        <button className='w-full p-3 text-blue-900 bg-white mt-3 rounded-2xl' onClick={mint}>Mint NFT 🎉</button>
       </div>
       <div className='flex flex-col w-full h-fit border-2 border-white mt-10 p-4 rounded-2xl ' >
         <label className='text-2xl text-white font-extrabold'>Gift NFT</label>
         <p className='text-xl text-white font-bold'>Enter recepient address</p>
-        <input className='w-full p-3 font-medium rounded-2xl mt-2 text-black' placeholder='0x0AD34' />
-        <button className='w-full p-3 text-blue-900 bg-white mt-3 rounded-2xl'>Gift NFT 🎉</button>
+        <input className='w-full p-3 font-medium rounded-2xl mt-2 text-black' placeholder='0x0AD34' onChange={(e)=>setGift(e.target.value)} />
+        <button className='w-full p-3 text-blue-900 bg-white mt-3 rounded-2xl' onClick={giftmint}>Gift NFT 🎉</button>
       </div>
       </div>
     </div>
