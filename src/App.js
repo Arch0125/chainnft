@@ -157,7 +157,7 @@ const giftmintnft={
   }
 
   return (
-    <div className='flex flex-row w-screen h-screen bg-white' >
+    <div className='flex flex-row w-screen h-screen bg-black' >
         <ToastContainer
 position="bottom-center"
 autoClose={5000}
@@ -169,51 +169,57 @@ pauseOnFocusLoss
 draggable
 pauseOnHover
 />
-      <div className=' flex flex-col bg-blue-900 w-[20%] text-white p-6 m-4 rounded-3xl ' >
+      <div className=' flex flex-col bg-gradient-to-r from-fuchsia-600 to-pink-600 w-[20%] text-white p-1 m-4 rounded-3xl ' >
+        <div className='flex flex-col bg-black h-full w-full p-6 rounded-3xl'>
         <label className='text-5xl font-extrabold mt-5' >Chains <br/> NFT</label>
         <p className='text-xl mt-10 '>The marketplace where you can mint NFTs without even connecting your wallet</p>
-        <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-10 ' >Start Creating 👉</button>
+        <button className='bg-white text-black p-3 text-xl rounded-2xl mt-10 ' >Start Creating 👉</button>
+        </div>
       </div>
-      <div className='flex flex-col bg-blue-900 w-[40%] text-white p-6 m-4 rounded-3xl ' >
-        <label className='text-xl font-extrabold bg-white text-blue-900 w-fit-h-fit p-3 rounded-xl' >1. Uploading your Image </label>
+      <div className='flex flex-col bg-gradient-to-r from-fuchsia-600 to-pink-600 w-[40%] text-white p-1 m-4 rounded-3xl ' >
+      <div className='flex flex-col bg-black h-full w-full p-6 rounded-3xl'>
+        <label className='text-xl font-extrabold bg-white text-black w-fit-h-fit p-3 rounded-xl' >1. Uploading your Image </label>
         <div className='flex flex-col w-full h-fit border-2 border-white mt-5 p-4 rounded-2xl ' >
           <label className='text-xl font-medium mb-2' >Choose your image :</label>
         <input type="file" onChange={(e)=>setFile(e.target.files[0])} />
         </div>
         <div className='flex flex-col w-full h-fit border-2 border-white mt-10 p-4 rounded-2xl ' >
           <label className='text-xl font-medium mb-2' >Or even draw using our editors :</label>
-          <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-5 ' >Pixel Editor👉</button>
-          <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-2 ' >Paint Editor👉</button>
+          <button className='bg-white text-black p-3 text-xl rounded-2xl mt-5 ' >Pixel Editor👉</button>
+          <button className='bg-white text-black p-3 text-xl rounded-2xl mt-2 ' >Paint Editor👉</button>
 
         </div>
-        <label className='text-xl font-extrabold bg-white text-blue-900 w-fit-h-fit p-3 mt-10 rounded-xl' >2. Uploading your IPFS </label>
+        <label className='text-xl font-extrabold bg-white text-black w-fit-h-fit p-3 mt-10 rounded-xl' >2. Uploading your IPFS </label>
         <div className='flex flex-col w-full h-full border-2 border-white mt-5 p-4 rounded-2xl ' >
           <label className='text-2xl font-medium ' >Enter details about Image : </label>
           <input className='w-full mt-5 h-fit p-2 rounded-xl text-black' placeholder='NFT Name' onChange={(e)=>setFileName(e.target.value)} />
           <input className='w-full mt-5 h-fit p-2 rounded-xl text-black' placeholder='NFT Description' onChange={(e)=>setDesc(e.target.value)} />
-          <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-5 ' onClick={uploadipfs} >Upload to IPFS</button>
-          <button className='bg-white text-blue-900 p-3 text-xl rounded-2xl mt-5 ' onClick={getipfs} >Get IPFS</button>
+          <button className='bg-white text-black p-3 text-xl rounded-2xl mt-5 ' onClick={uploadipfs} >Upload to IPFS</button>
+          <button className='bg-white text-black p-3 text-xl rounded-2xl mt-5 ' onClick={getipfs} >Get IPFS</button>
+        </div>
         </div>
       </div>
-      <div className='flex flex-col bg-blue-900 w-[40%] h-fit text-white p-6 m-4 rounded-3xl ' >
-      <label className='text-xl font-extrabold bg-white text-blue-900 w-fit-h-fit p-3 rounded-xl' >3. Mint your NFT </label>
+      <div className='flex flex-col bg-gradient-to-r from-fuchsia-600 to-pink-600 w-[40%] h-fit text-white p-1 m-4 rounded-3xl ' >
+        <div className='flex flex-col bg-black h-full w-full p-6 rounded-3xl'>
+      <label className='text-xl font-extrabold bg-white text-black w-fit-h-fit p-3 rounded-xl' >3. Mint your NFT </label>
       <div className='flex flex-col w-full h-fit border-2 border-white bg-white mt-5 p-4 rounded-2xl ' >
-        <label className='text-2xl text-blue-900 font-extrabold'>Preview NFT</label>
+        <label className='text-2xl text-black font-extrabold'>Preview NFT</label>
         <img src={nftimage} className=' border-2 p-4 rounded-2xl' />
-        <p className='text-xl text-blue-900 font-bold' >Name : {nftname}</p>
-        <p className='text-xl text-blue-900 font-bold' >Description : {nftdesc}</p>
+        <p className='text-xl text-black font-bold' >Name : {nftname}</p>
+        <p className='text-xl text-black font-bold' >Description : {nftdesc}</p>
       </div>
       <div className='flex flex-col w-full h-fit border-2 border-white mt-10 p-4 rounded-2xl ' >
         <label className='text-xl text-white font-bold'>Connect Wallet</label>
         <p className='text-xl text-white font-bold'>Or Enter Wallet Address</p>
         <input className='w-full p-3 font-medium rounded-2xl mt-2 text-black' placeholder='0x0AD34' onChange={(e)=>setWalletAddress(e.target.value)} />
-        <button className='w-full p-3 text-blue-900 bg-white mt-3 rounded-2xl' onClick={mint}>Mint NFT 🎉</button>
+        <button className='w-full p-3 text-black bg-white mt-3 rounded-2xl' onClick={mint}>Mint NFT 🎉</button>
       </div>
       <div className='flex flex-col w-full h-fit border-2 border-white mt-10 p-4 rounded-2xl ' >
         <label className='text-2xl text-white font-extrabold'>Gift NFT</label>
         <p className='text-xl text-white font-bold'>Enter recepient address</p>
         <input className='w-full p-3 font-medium rounded-2xl mt-2 text-black' placeholder='0x0AD34' onChange={(e)=>setGift(e.target.value)} />
-        <button className='w-full p-3 text-blue-900 bg-white mt-3 rounded-2xl' onClick={giftmint}>Gift NFT 🎉</button>
+        <button className='w-full p-3 text-black bg-white mt-3 rounded-2xl' onClick={giftmint}>Gift NFT 🎉</button>
+      </div>
       </div>
       </div>
     </div>
